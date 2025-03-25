@@ -37,6 +37,10 @@ public:
 	Reader(const Reader&) = delete;
 	Reader& operator=(const Reader&) = delete;
 
+	Reader* clone() override {
+		return new Reader(*this);
+	}
+
 	void attack(const ICharacterUnit& attacker) override {
 		decrease_life_points_(attacker.get_power());
 	}

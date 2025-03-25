@@ -33,7 +33,8 @@
 - We store the values that are unique to each unit in a `CharacterUnit` object. These values change over time. The dimensions and sprite are constant, so we can keep a single object with these values. This immutable data is called the **intrinsic state**, while the mutable part of the object (the `CharacterUnit`) is called the **extrinsic state**.
 - ![[Pasted image 20250325131108.png]]
 - The **Prototype pattern** lets us create duplicates of objects independently of their type.
-
+- A common term for one iteration of the game loop is a **frame**. **FPS (frames per second)** describes the speed of the gameplay. A game running at 60FPS requires each frame to be ~16ms.
+- 
 
 
 
