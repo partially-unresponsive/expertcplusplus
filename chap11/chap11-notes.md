@@ -27,10 +27,12 @@
 > The **Flyweight structural design pattern**
 
 - **Structural patterns** take care of assembling objects and classes into larger, more flexible, structures. **Flyweight** allows us to **cache objects** by sharing their common parts.
-- The Flyweight pattern suggests decomposing a heavy object into two:
+- The **Flyweight** pattern suggests decomposing a heavy object into two:
 	- An **immutable** object that contains the same data for each object of the same kind
 	- A **mutable** object that uniquely identifies itself from others
-- 
+- We store the values that are unique to each unit in a `CharacterUnit` object. These values change over time. The dimensions and sprite are constant, so we can keep a single object with these values. This immutable data is called the **intrinsic state**, while the mutable part of the object (the `CharacterUnit`) is called the **extrinsic state**.
+- ![[Pasted image 20250325131108.png]]
+- The **Prototype pattern** lets us create duplicates of objects independently of their type.
 
 
 

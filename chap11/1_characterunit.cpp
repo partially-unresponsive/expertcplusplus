@@ -2,12 +2,32 @@
 #include <numeric>
 #include <thread>
 #include <vector>
+
+class Point {
+	// TODO:
+};
+
 class ICharacterUnit {
 public:
+	virtual ICharacterUnit* clone() = 0;
+	void move(const Point& to) {
+		// TODO: graphics-specific implementation
+	}
 	virtual void attack(const ICharacterUnit&) = 0;
 	virtual void destroy() = 0;
-	virtual int get_power() const = 0;
-	virtual int get_life_points() const = 0;
+
+	int get_power() const { return power_; }
+	int get_life_points() const { return life_points_; }
+
+private:
+	ICharacterUnit(const ICharacterUnit& other) {
+		life_points_ = other.life_points_;
+		power_ = other.power_;
+	}
+
+private:
+	int life_points_;
+	int power_;
 };
 
 
@@ -23,14 +43,6 @@ public:
 
 	void destroy() override {
 		// TODO: 
-	}
-
-	int get_life_points() const override {
-		return life_points_;
-	}
-
-	int get_power() const override {
-		return power_;
 	}
 
 private:
