@@ -86,4 +86,189 @@ __libc_start_call_main (main=main@entry=0x555555555139 <main()>, argc=argc@entry
 > **Function breakpoint**, **conditional breakpoint**, **list and delete breakpoints**
 
 
-- **Function breakpoints**. To set a breakpoint at the beginning of a function, we can use the `b function_name` command.
+- **Function breakpoints**. To set a breakpoint at the beginning of a function, we can use the `b function_name` command. We can use tab completion during input.
+- **Conditional breakpoints**. `(gdb) b f.cpp:26 if s==0  // set a breakpoint in f.cpp, line 26, if s==0`; `(gdb) b f.cpp:20 if ((int)strcmp(y, "liberal")) == 0` (translates to `if y == "liberal"`)
+- **List and delete breakpoints**. We can list breakpoints: `(gdb) i b`, and we can delete breakpoints: `(gdb) delete breakpoints 1`; `(gdb) delete breakpoints 2-5`
+- **Remove or make a breakpoint unconditional**. Since each breakpoint has a number, we can remove a condition from a breakpoint: `(gdb) cond 1  // breakpoint 1 is unconditional now`
+- **Watchpoint**. A **watchpoint** ==can stop execution when the value of an expression changes, without having to predict where (in which line) it may happen==. There are three kinds of watchpoints:
+	- `watch`: gdb will break when a *write* occurs
+	- `rwatch`: gdb will break when a *read* occurs
+	- `awatch`: gdb will break when either a *read* or *write* happens
+- **Continue**. When we've finished examining the values of variables at a breakpoint, we can use the `continue` or `c` command to continue program execution until the debugger encounters a breakpoint, a **signal**, an error, or normal process termination
+- **Finish**. Once we go inside a function, we may want to execute it continuously until it returs to its caller line. This can be done using the `finish` command.
+- You should also write `(gdb) set logging on` before working on this, to get a **stack trace** (log) in `gdb.txt` afterwards and read it more comfortably in nvim (rather than on the terminal)
+```sh
+Projects/expertcplusplus/chap13$ gdb och13_gdb_2.out 
+GNU gdb (GDB) 16.2
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-pc-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from och13_gdb_2.out...
+(gdb) b dotproduct(float const*, float const*, int) 
+Breakpoint 1 at 0x1294: file ch13_gdb_2o.cpp, line 20.
+(gdb) b ch13_gdb_2o.cpp:24 if i==1
+Breakpoint 2 at 0x12b6: file ch13_gdb_2o.cpp, line 24.
+(gdb) i b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000001294 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:20
+2       breakpoint     keep y   0x00000000000012b6 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:24
+	stop only if i==1
+(gdb) cond 2
+Breakpoint 2 now unconditional.
+(gdb) i b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000000000001294 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:20
+2       breakpoint     keep y   0x00000000000012b6 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:24
+(gdb) r
+Starting program: /home/CutieSai/chastity_vault/chastity_vault/Coding/Projects/expertcplusplus/chap13/och13_gdb_2.out 
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.archlinux.org>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/usr/lib/libthread_db.so.1".
+Breakpoint 1, dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:20
+20	const float *p = x;
+(gdb) p x
+$1 = (const float *) 0x7fffffffe550
+(gdb) c
+Continuing.
+Breakpoint 2, dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:24
+24		s += (*p) * (*q);
+(gdb) p i
+$2 = 0
+(gdb) n
+23	for(int i=0; i<n; ++i, ++p, ++q){
+(gdb) n
+Breakpoint 2, dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:24
+24		s += (*p) * (*q);
+(gdb) p s
+$3 = 1
+(gdb) watch s
+Hardware watchpoint 3: s
+(gdb) n
+Hardware watchpoint 3: s
+Old value = 1
+New value = 5
+dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:23
+23	for(int i=0; i<n; ++i, ++p, ++q){
+(gdb) i b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555555294 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:20
+	breakpoint already hit 1 time
+2       breakpoint     keep y   0x00005555555552b6 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:24
+	breakpoint already hit 2 times
+3       hw watchpoint  keep y                      s
+	breakpoint already hit 1 time
+(gdb) f
+#0  dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:23
+23	for(int i=0; i<n; ++i, ++p, ++q){
+(gdb) finish
+Run till exit from #0  dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:23
+Breakpoint 2, dotproduct (x=0x7fffffffe550, y=0x7fffffffe550, n=5) at ch13_gdb_2o.cpp:24
+24		s += (*p) * (*q);
+(gdb) i b
+Num     Type           Disp Enb Address            What
+1       breakpoint     keep y   0x0000555555555294 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:20
+	breakpoint already hit 1 time
+2       breakpoint     keep y   0x00005555555552b6 in dotproduct(float const*, float const*, int) 
+                                                   at ch13_gdb_2o.cpp:24
+	breakpoint already hit 3 times
+3       hw watchpoint  keep y                      s
+	breakpoint already hit 1 time
+(gdb) delete breakpoints 1-3
+(gdb) c
+Continuing.
+dot(x,x) = 55.000000
+dot(x,y) = 55.000000
+[Inferior 1 (process 4346) exited normally]
+(gdb) q
+```
+> All the commands run to "debug" a file using **GDB (GNU Debugger)**
+
+![[Pasted image 20250326231826.png]]
+> Practical debugging strategies
+
+- **Static analysis** is analysing a program without executing it.
+- **Dynamic analysis (Dynamic program analysis)** is analysing a program by executing it.
+- The automatic static code analysis tools are designed to analyse a set of code against one or multiple sets of **coding rules or guidelines**. People use static code analysis, static analysis, or source code analysis interchangeably.
+![[Pasted image 20250326232624.png]]
+> Static analysis benefits and limitations
+
+![[Pasted image 20250326232651.png]]
+> Automatic C/C++ code analysis tools, `-Wall`, `-Wextra`, `-Weffc++`
+
+Automatic C/C++ code analysis tools:
+- **Clang**
+- **GNU g++**
+- **Clion**
+- **CPPCheck**
+- **Eclipse**
+- Visual Studio
+
+- `-Wall`: Enables all **construction warnings**, which are questionable for some users. These warnings are easy to avoid or modify, even in conjunction with macros. It also enables some language-specific warnings described in "**C++ Dialect Options**" and "**Objective-C/C++ Dialect Options**"
+
+- `-Wextra`: As its name implies, it examines certain extra warning flags that are not checked by `-Wall`. Warning messages for any of the following cases will be printed:
+```ad-info
+title: -Wextra Guidelines
+
+- A pointer is compared against integer zero with the <, <=, >, or >= operands.
+- A non-enumerator and an enumerator show up in a conditional expression.
+- Ambiguous virtual bases.
+- Subscripting a `register` type array.
+- Using the address of a `register` type variable.
+- A derived class' copy constructor does not initialize its base class.
+- Note that (b)-(f) are C++ only.
+```
+
+`-Weffc++`: It checks the violations of some guidelines suggested in "**Effective and More Effective C++"**, written by Scott Meyers. These guidelines include the following:
+```ad-info
+title: -Weffc++ Guidelines
+
+- Define a copy constructor and an assignment operator for classes with dynamically allocated memory.
+- Prefer initialization over assignment in constructors.
+- Make destructors virtual in base classes.
+- Have the `operator=` return a reference to `*this`.
+- Don't try to return a reference when you must return an object.
+- Distinguish between prefix and postfix forms of increment and decrement operators.
+- Never overload `&&`, `||`, or `,`.
+```
+- [ ] #TODO Read "**C++ Dialect Options**" and "**Objective-C/C++ Dialect Options**"
+- [ ] #TODO Read "**Effective and More Effective C++"**, written by Scott Meyers
+
+- **Dynamic analysis** analyzes the performance of a software program by executing it either on a real or **virtual processor**. It can be done automatically or manually.
+- [ ] #TODO **Unit tests, integration tests, system tests**, and **acceptance tests** are typically **human**-involved dynamic analysis processes.
+- [ ] #TODO On the other hand, **memory debugging, memory leak detection** and **profiling tools** such as **IBM purify, Valgrind** and **Clang sanitizers** are **automatic** dynamic analysis tools.
+
+- The mechanism of dynamic analysis tools is that they use **code instrumentation** and/or a **simulation environment** to perform checks on the analyzed code *as* it executes. We can interact with a program in the following ways:
+	- **Source code instrumentation**: A special code segment is inserted into the original source code *before* compilation
+	- **Object code instrumentation**: A special **binary code** is added directly to the executable file
+	- **Compilation stage instrumentation**: A **checking code** is added through special compiler switches
+	- No source code changes. Instead, it uses special **execution stage libraries** to detect errors.
+- Dynamic analysis **pros**: 
+	- gives no false positives or false negative results
+	- does not need source code, so proprietary code can be tested by a third-party org
+- Dynamic analysis **cons**:
+	- Only detects defects on the routes related to the input data
+	- Can only check one execution path at a time. To obtain a complete picture, we need to run the test as many times as possible
+	- Cannot check the correctness of the code (like static analysis)
+	- Executing incorrect code on a real processor may have unanticipated results.
+- 
