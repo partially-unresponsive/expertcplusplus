@@ -271,4 +271,27 @@ title: -Weffc++ Guidelines
 	- Can only check one execution path at a time. To obtain a complete picture, we need to run the test as many times as possible
 	- Cannot check the correctness of the code (like static analysis)
 	- Executing incorrect code on a real processor may have unanticipated results.
+
+- Installing and utilizing **Valgrind** for dynamic analysis:
+1. `sudo pacman -S valgrind`
+2. `g++ -o ch13_dyn -std=c++11 -Wall ch13_dynamic_analysis.cpp`
+3. `valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=valgrind-out.txt ./ch13_dyn`
+4. Check `valgrind-out.txt` for the `HEAP SUMMARY` and the `LEAK SUMMARY`. Version 2 should have no leak summary (as all the memory has been freed), but version 1 *will* have 40 bytes of leaked data due to not calling `free(p);` inside the `ch13_dynamic_analysis.cpp` file.
+5. There are also 150 errors from 10 contexts that...I don't understand xd
+
+![[Pasted image 20250327115241.png]]
+> **Unit testing, test-driven development (TDD), behavior-driven development (BDD)**
+
+- A **unit** is an individual component in a larger or more complex application. Unit testing is a software testing method that's used to determine whether a unit of code behaves as expected in terms of its design requirements. The main features of unit testings are:
+	- Small and simple, quick to write and run
+	- Isolated from dependencies, each one can be ran in parallel
+	- Helps understand the unit interface
+	- Greatly helps integration and acceptance tests
+	- Normally prepared and performed by developers.
+- [ ] #TODO While we can write a unit test package from scratch, there are a ton of **Unit Test Frameworks (UTFs)** already being developed by the community: **Boost.Test, CPPUnit, GoogleTest, Unit++,** and **CxxTest** are the most popular ones.
+![[Pasted image 20250327122658.png]]
+> **Unit testing, Unit Test Frameworks (UTFs)**
+
+- **Test-Driven Development (TDD)** starts by writing failing test code and then adds/modifies the code to let the test pass. After that, we refactorize the test plan and code until all the requirements are satisfied.
+- We used `<boost/test/included/unit_test.hpp>` in `ch13_unit_test1.cpp` to get `a.out`
 - 
