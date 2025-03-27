@@ -1,7 +1,8 @@
+#pragma once
 #include "ch13_tdd_v1.h"
 using namespace std;
 
-template< class T>
+template<class T>
 Mat<T>::Mat(const uint32_t m, const uint32_t n)
 	: m_rows(m)
 	, m_cols(n)
@@ -10,13 +11,13 @@ Mat<T>::Mat(const uint32_t m, const uint32_t n)
 	creatBuf();
 }
 
-template< class T>
+template<class T>
 Mat<T> :: ~Mat()
 { 
 	deleteBuf(); 
 }
 
-template< class T>
+template<class T>
 void Mat<T>::creatBuf()
 {
 	uint32_t sz = m_rows * m_cols;
@@ -30,7 +31,7 @@ void Mat<T>::creatBuf()
 	}
 }
 
-template< class T>
+template<class T>
 void Mat<T>::deleteBuf()
 {
 	if (m_buf) {
@@ -39,7 +40,7 @@ void Mat<T>::deleteBuf()
 	}
 }
 
-template< class T>
+template<class T>
 void Mat<T> ::print(const char* str) const
 {
 	cout << str << endl;

@@ -1,6 +1,7 @@
 //ch13_tdd_v1.h
 #ifndef __CH13_TDD_V1__
 #define __CH13_TDD_V1__
+#include <cstdint>
 #include <iostream>
 #include <assert.h>
 template< class T>
@@ -10,7 +11,7 @@ public:
 	Mat(const Mat<T> &rhs) = delete;
 	~Mat();
 
-	Mat<T>& operator = (const Mat<T> &x) = delete;
+	Mat<T>& operator=(const Mat<T> &x) = delete;
 
 	uint32_t rows() { return m_rows; }
 	uint32_t cols() { return m_cols; }

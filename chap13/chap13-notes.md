@@ -294,4 +294,8 @@ title: -Weffc++ Guidelines
 
 - **Test-Driven Development (TDD)** starts by writing failing test code and then adds/modifies the code to let the test pass. After that, we refactorize the test plan and code until all the requirements are satisfied.
 - We used `<boost/test/included/unit_test.hpp>` in `ch13_unit_test1.cpp` to get `a.out`
-- 
+
+![[Pasted image 20250327134348.png]]
+> **Behavior-driven development frameworks**: JBehave, RBehave, Fitnesse, Cucumber, V-Shape model, *The Dreadful ""Agile"" Software Development Cycle*
+
+- [ ] #TODO Exercises and questions section of chapter 13
