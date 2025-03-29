@@ -298,4 +298,4 @@ title: -Weffc++ Guidelines
 ![[Pasted image 20250327134348.png]]
 > **Behavior-driven development frameworks**: JBehave, RBehave, Fitnesse, Cucumber, V-Shape model, *The Dreadful ""Agile"" Software Development Cycle*
 
-- [ ] #TODO Exercises and questions section of chapter 13
+- [x] Exercises and questions section of chapter 13
